@@ -11,6 +11,7 @@ public class Game : GameWindow
 
     private readonly float[] vertices =
     {
+              // positions        // colors
              0.5f,  0.6f, 0.0f,   1.0f, 0.24f, 0.24f,   // pantalla
              0.5f, -0.2f, 0.0f,  0.24f,  1.0f, 0.24f,
             -0.5f, -0.2f, 0.0f,  0.24f, 0.24f,  1.0f,
@@ -31,15 +32,15 @@ public class Game : GameWindow
             -0.5f, -0.2f, -0.1f,  0.10f, 0.10f, 0.10f,
             -0.5f,  0.6f, -0.1f,  0.10f, 0.10f, 0.10f,
 
-             0.05f,  0.6f,  0.0f, 0.20f, 0.20f, 0.20f,  // lado izquierdo 
-             0.05f, -0.3f,  0.0f, 0.20f, 0.20f, 0.20f,
-             0.05f,  0.6f, -0.1f, 0.20f, 0.20f, 0.20f,
-             0.05f, -0.3f, -0.1f, 0.20f, 0.20f, 0.20f,
+             0.5f,  0.6f,  0.0f, 0.20f, 0.20f, 0.20f,  // lado izquierdo 
+             0.5f, -0.3f,  0.0f, 0.20f, 0.20f, 0.20f,
+             0.5f,  0.6f, -0.1f, 0.20f, 0.20f, 0.20f,
+             0.5f, -0.3f, -0.1f, 0.20f, 0.20f, 0.20f,
 
-            -0.05f,  0.6f,  0.0f, 0.20f, 0.20f, 0.20f,  // lado derecho 
-            -0.05f, -0.3f,  0.0f, 0.20f, 0.20f, 0.20f,
-            -0.05f,  0.6f, -0.1f, 0.20f, 0.20f, 0.20f,
-            -0.05f, -0.3f, -0.1f, 0.20f, 0.20f, 0.20f
+            -0.5f,  0.6f,  0.0f, 0.20f, 0.20f, 0.20f,  // lado derecho 
+            -0.5f, -0.3f,  0.0f, 0.20f, 0.20f, 0.20f,
+            -0.5f,  0.6f, -0.1f, 0.20f, 0.20f, 0.20f,
+            -0.5f, -0.3f, -0.1f, 0.20f, 0.20f, 0.20f
 
             -0.5f, 0.6f,  0.0f, 0.20f, 0.20f, 0.20f,   // lado superior
              0.5f, 0.6f,  0.0f, 0.20f, 0.20f, 0.20f,
@@ -50,8 +51,6 @@ public class Game : GameWindow
              0.5f, -0.3f,  0.0f, 0.20f, 0.20f, 0.20f,
             -0.5f, -0.3f, -0.1f, 0.20f, 0.20f, 0.20f,
              0.5f, -0.3f, -0.1f, 0.20f, 0.20f, 0.20f
-
-
         };
 
     uint[] indices = {
@@ -84,6 +83,7 @@ public class Game : GameWindow
     int VertexBufferObject;
     int ElementBufferObject;
     int VertexArrayObject;
+    Stopwatch timer;
 
     Shader shader;
 
@@ -129,8 +129,15 @@ public class Game : GameWindow
 
         GL.Clear(ClearBufferMask.ColorBufferBit);
 
-        shader.Use();
         GL.BindVertexArray(VertexArrayObject);
+
+        var transform = Matrix4.Identity;
+        transform = transform * Matrix4.CreateRotationY(MathHelper.DegreesToRadians(20f));
+        transform = transform * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(20f));
+
+        shader.Use();
+
+        shader.SetMatrix4("transform", transform);
         GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
         SwapBuffers();
