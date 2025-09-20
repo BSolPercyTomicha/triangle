@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
 using OpenTK.Mathematics;
 
 
-[JsonObjectAttribute]
-public class Piece : Dictionary<string, Face>
+public class Piece
 {
+    public Dictionary<string, Face> Faces = new();
+
     public bool visible = true;
 
     private Matrix4 pitch, roll, yaw;
@@ -28,7 +28,7 @@ public class Piece : Dictionary<string, Face>
     {
         if (visible)
         {
-            foreach (Face face in this.Values)
+            foreach (Face face in Faces.Values)
             {
                 face.Draw(shader, roll * pitch * yaw * Matrix4.CreateTranslation(offset_x, offset_y, offset_z) * model, view, projection, time);
             }

@@ -1,10 +1,7 @@
-using Newtonsoft.Json;
 using OpenTK.Mathematics;
-
-[JsonObjectAttribute]
 public class Face
 {
-    Dictionary<byte, Tri> Tris = new();
+    public Dictionary<byte, Tri> Tris = new();
 
     public bool visible = true;
 
