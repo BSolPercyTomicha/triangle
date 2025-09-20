@@ -1,5 +1,4 @@
 using OpenTK.Mathematics;
-
 public class face : HashSet<tri>
 {
     private Matrix4 pitch, roll, yaw;
@@ -17,7 +16,7 @@ public class face : HashSet<tri>
     {
         foreach (tri tri in this)
         {
-            tri.draw(shader, yaw * Matrix4.CreateTranslation(offset_x, offset_y, offset_z) * model, view, projection, time);
+            tri.draw(shader, roll * pitch * yaw * Matrix4.CreateTranslation(offset_x, offset_y, offset_z) * model, view, projection, time);
         }
 
     }
@@ -25,5 +24,15 @@ public class face : HashSet<tri>
     public void rotate_Y(float delta)
     {
         yaw = yaw * Matrix4.CreateRotationY(delta);
+    }
+
+    public void rotate_X(float delta)
+    {
+        pitch = pitch * Matrix4.CreateRotationX(delta);
+    }
+
+    public void rotate_Z(float delta)
+    {
+        roll = roll * Matrix4.CreateRotationZ(delta);
     }
 }

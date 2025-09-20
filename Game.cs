@@ -54,11 +54,11 @@ public class Game : GameWindow
                     {
                         {
                             "main monitor",
-                            new piece(0.0f, 0.11f, 0.0f)
+                            new piece(0.0f, 0.3001f, 0.0f)
                             {
                                 {
                                     "screen",
-                                    new face(-0.317f, 0.02f, 0.01f)
+                                    new face(-0.317f, -0.1905f, 0.01f)
                                     {
                                         new tri(0.634f, 0.000f, 0.0f, 0.24f, 1.00f, 0.24f,
                                                 0.634f, 0.381f, 0.0f, 1.00f, 0.24f, 0.24f,
@@ -72,7 +72,7 @@ public class Game : GameWindow
 
                                 {
                                     "back pane",
-                                    new face(-0.317f, 0.0f, -0.01f)
+                                    new face(-0.317f, -0.2005f, -0.01f)
                                     {
                                         new tri(0.634f, 0.000f, 0.0f, 0.10f, 0.10f,  0.10f,
                                                 0.634f, 0.401f, 0.0f, 0.10f, 0.10f,  0.10f,
@@ -86,7 +86,7 @@ public class Game : GameWindow
 
                                 {
                                     "speakers",
-                                    new face(-0.317f, 0.0f, 0.01f)
+                                    new face(-0.317f, -0.2005f, 0.01f)
                                     {
                                         new tri(0.634f, 0.02f, 0.0f, 0.24f,  0.24f, 0.24f,
                                                 0.634f, 0.00f, 0.0f, 0.24f,  0.24f, 0.24f,
@@ -100,7 +100,7 @@ public class Game : GameWindow
 
                                 {
                                     "left pane",
-                                    new face(-0.317f, 0.0f, -0.01f)
+                                    new face(-0.317f, -0.2005f, -0.01f)
                                     {
                                         new tri(0.0f, 0.401f, 0.02f, 0.17f, 0.17f, 0.17f,
                                                 0.0f, 0.000f, 0.02f, 0.17f, 0.17f, 0.17f,
@@ -114,7 +114,7 @@ public class Game : GameWindow
 
                                 {
                                     "right pane",
-                                    new face(0.317f, 0.0f, -0.01f)
+                                    new face(0.317f, -0.2005f, -0.01f)
                                     {
                                         new tri(0.0f, 0.401f, 0.02f, 0.17f, 0.17f, 0.17f,
                                                 0.0f, 0.000f, 0.02f, 0.17f, 0.17f, 0.17f,
@@ -128,7 +128,7 @@ public class Game : GameWindow
 
                                 {
                                     "top pane",
-                                    new face(-0.317f, 0.401f, -0.01f)
+                                    new face(-0.317f, 0.2005f, -0.01f)
                                     {
                                         new tri(0.000f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
                                                 0.634f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
@@ -142,7 +142,7 @@ public class Game : GameWindow
 
                                 {
                                     "bottom pane",
-                                    new face(-0.317f, 0.0f, -0.01f)
+                                    new face(-0.317f, -0.2005f, -0.01f)
                                     {
                                         new tri(0.000f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
                                                 0.634f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
@@ -630,13 +630,36 @@ public class Game : GameWindow
                 Position -= up * speed * (float)args.Time;
             }
 
-            if (KeyboardState.IsKeyDown(Keys.P))
+            if (KeyboardState.IsKeyDown(Keys.K))
             {
-                main_scene["desk"]["left foot"].rotate_Y(1f * (float)args.Time);
+                main_scene["monitor"]["main monitor"].rotate_X(1f * (float)args.Time);
+            }
+
+            if (KeyboardState.IsKeyDown(Keys.I))
+            {
+                main_scene["monitor"]["main monitor"].rotate_X(-1f * (float)args.Time);
+            }
+
+            if (KeyboardState.IsKeyDown(Keys.L))
+            {
+                main_scene["monitor"]["main monitor"].rotate_Y(1f * (float)args.Time);
+                main_scene["monitor"]["stand"].rotate_Y(1f * (float)args.Time);
+            }
+
+            if (KeyboardState.IsKeyDown(Keys.J))
+            {
+                main_scene["monitor"]["main monitor"].rotate_Y(-1f * (float)args.Time);
+                main_scene["monitor"]["stand"].rotate_Y(-1f * (float)args.Time);
+            }
+
+            if (KeyboardState.IsKeyDown(Keys.U))
+            {
+                main_scene["monitor"]["main monitor"].rotate_Z(1f * (float)args.Time);
             }
 
             if (KeyboardState.IsKeyDown(Keys.O))
             {
+                main_scene["monitor"]["main monitor"].rotate_Z(-1f * (float)args.Time);
             }
         }
     }
