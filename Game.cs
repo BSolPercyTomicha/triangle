@@ -29,7 +29,565 @@ public class Game : GameWindow
     int current_second_frames = 0;
     int fps = 0;
 
-    object_array pantallas = new object_array();
+    scene main_scene;
+
+    protected override void OnLoad()
+    {
+        base.OnLoad();
+        MousePosition = new Vector2(Size.X / 2f, Size.Y / 2f);
+
+        Console.WriteLine("Current position: {0}\n\n", Position);
+
+        GL.ClearColor(0.25882353f, 0.72549f, 0.96f, 1.0f);
+        GL.Enable(EnableCap.DepthTest);
+        CursorState = CursorState.Grabbed;
+
+        Position = new Vector3(0.0f, 0.0f, 3.0f);
+        front = new Vector3(0.0f, 0.0f, -1.0f);
+        up = Vector3.UnitY;
+
+        main_scene = new scene
+            {
+                {
+                    "monitor",
+                    new scene_object(0.0f, 0.75f, 0.0f)
+                    {
+                        {
+                            "main monitor",
+                            new piece(0.0f, 0.11f, 0.0f)
+                            {
+                                {
+                                    "screen",
+                                    new face(-0.317f, 0.02f, 0.01f)
+                                    {
+                                        new tri(0.634f, 0.000f, 0.0f, 0.24f, 1.00f, 0.24f,
+                                                0.634f, 0.381f, 0.0f, 1.00f, 0.24f, 0.24f,
+                                                0.000f, 0.000f, 0.0f, 0.24f, 0.24f, 1.00f),
+
+                                        new tri(0.634f,  0.381f, 0.0f, 1.00f, 0.24f, 0.24f,
+                                                0.000f, -0.000f, 0.0f, 0.24f, 0.24f, 1.00f,
+                                                0.000f,  0.381f, 0.0f, 0.24f, 0.24f, 0.24f)
+                                    }
+                                },
+
+                                {
+                                    "back pane",
+                                    new face(-0.317f, 0.0f, -0.01f)
+                                    {
+                                        new tri(0.634f, 0.000f, 0.0f, 0.10f, 0.10f,  0.10f,
+                                                0.634f, 0.401f, 0.0f, 0.10f, 0.10f,  0.10f,
+                                                0.000f, 0.000f, 0.0f, 0.10f, 0.10f,  0.10f),
+
+                                        new tri(0.634f, 0.401f, 0.0f, 0.10f, 0.10f,  0.10f,
+                                                0.000f, 0.000f, 0.0f, 0.10f, 0.10f,  0.10f,
+                                                0.000f, 0.401f, 0.0f, 0.10f, 0.10f,  0.10f)
+                                    }
+                                },
+
+                                {
+                                    "speakers",
+                                    new face(-0.317f, 0.0f, 0.01f)
+                                    {
+                                        new tri(0.634f, 0.02f, 0.0f, 0.24f,  0.24f, 0.24f,
+                                                0.634f, 0.00f, 0.0f, 0.24f,  0.24f, 0.24f,
+                                                0.000f, 0.02f, 0.0f, 0.24f,  0.24f, 0.24f),
+
+                                        new tri(0.634f, 0.00f, 0.0f, 0.24f,  0.24f, 0.24f,
+                                                0.000f, 0.02f, 0.0f, 0.24f,  0.24f, 0.24f,
+                                                0.000f, 0.00f, 0.0f, 0.24f,  0.24f, 0.24f)
+                                    }
+                                },
+
+                                {
+                                    "left pane",
+                                    new face(-0.317f, 0.0f, -0.01f)
+                                    {
+                                        new tri(0.0f, 0.401f, 0.02f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.000f, 0.02f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.401f, 0.00f, 0.17f, 0.17f, 0.17f),
+
+                                        new tri(0.0f, 0.000f, 0.02f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.401f, 0.00f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.000f, 0.00f, 0.17f, 0.17f, 0.17f)
+                                    }
+                                },
+
+                                {
+                                    "right pane",
+                                    new face(0.317f, 0.0f, -0.01f)
+                                    {
+                                        new tri(0.0f, 0.401f, 0.02f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.000f, 0.02f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.401f, 0.00f, 0.17f, 0.17f, 0.17f),
+
+                                        new tri(0.0f, 0.000f, 0.02f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.401f, 0.00f, 0.17f, 0.17f, 0.17f,
+                                                0.0f, 0.000f, 0.00f, 0.17f, 0.17f, 0.17f)
+                                    }
+                                },
+
+                                {
+                                    "top pane",
+                                    new face(-0.317f, 0.401f, -0.01f)
+                                    {
+                                        new tri(0.000f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
+                                                0.634f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
+                                                0.000f, 0.0f, 0.00f, 0.20f, 0.20f, 0.20f),
+
+                                        new tri(0.634f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
+                                                0.000f, 0.0f, 0.00f, 0.20f, 0.20f, 0.20f,
+                                                0.634f, 0.0f, 0.00f, 0.20f, 0.20f, 0.20f)
+                                    }
+                                },
+
+                                {
+                                    "bottom pane",
+                                    new face(-0.317f, 0.0f, -0.01f)
+                                    {
+                                        new tri(0.000f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
+                                                0.634f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
+                                                0.000f, 0.0f, 0.00f, 0.20f, 0.20f, 0.20f),
+
+                                        new tri(0.634f, 0.0f, 0.02f, 0.20f, 0.20f, 0.20f,
+                                                0.000f, 0.0f, 0.00f, 0.20f, 0.20f, 0.20f,
+                                                0.634f, 0.0f, 0.00f, 0.20f, 0.20f, 0.20f)
+                                    }
+                                }
+                            }
+                        },
+
+                        {
+                            "stand",
+                            new piece(0.0f, 0.01f, 0.0f)
+                            {
+                                {
+                                    "front",
+                                    new face(-0.025f, 0.0f, 0.005f)
+                                    {
+                                        new tri(0.00f, 0.0f, 0.0f, 0.13f, 0.13f, 0.13f,
+                                                0.05f, 0.0f, 0.0f, 0.13f, 0.13f, 0.13f,
+                                                0.05f, 0.1f, 0.0f, 0.13f, 0.13f, 0.13f),
+
+                                        new tri(0.00f, 0.0f, 0.0f, 0.13f, 0.13f, 0.13f,
+                                                0.05f, 0.1f, 0.0f, 0.13f, 0.13f, 0.13f,
+                                                0.00f, 0.1f, 0.0f, 0.13f, 0.13f, 0.13f)
+                                    }
+                                },
+
+                                {
+                                    "back",
+                                    new face(-0.025f, 0.0f, -0.005f)
+                                    {
+                                        new tri(0.00f, 0.0f, 0.0f, 0.07f, 0.07f, 0.07f,
+                                                0.05f, 0.0f, 0.0f, 0.07f, 0.07f, 0.07f,
+                                                0.05f, 0.1f, 0.0f, 0.07f, 0.07f, 0.07f),
+
+                                        new tri(0.00f, 0.0f, 0.0f, 0.07f, 0.07f, 0.07f,
+                                                0.05f, 0.1f, 0.0f, 0.07f, 0.07f, 0.07f,
+                                                0.00f, 0.1f, 0.0f, 0.07f, 0.07f, 0.07f)
+                                    }
+                                },
+
+                                {
+                                    "left",
+                                    new face(-0.025f, 0.0f, -0.005f)
+                                    {
+                                        new tri(0.00f, 0.1f, 0.00f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.1f, 0.01f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.0f, 0.00f, 0.10f, 0.10f, 0.10f),
+
+                                        new tri(0.00f, 0.1f, 0.01f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.0f, 0.00f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.0f, 0.01f, 0.10f, 0.10f, 0.10f)
+                                    }
+                                },
+
+                                {
+                                    "right",
+                                    new face(0.025f, 0.0f, -0.005f)
+                                    {
+                                        new tri(0.00f, 0.1f, 0.00f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.1f, 0.01f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.0f, 0.00f, 0.10f, 0.10f, 0.10f),
+
+                                        new tri(0.00f, 0.1f, 0.01f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.0f, 0.00f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.0f, 0.01f, 0.10f, 0.10f, 0.10f)
+                                    }
+                                }
+                            }
+                        },
+
+                        {
+                            "base",
+                            new piece
+                            {
+                                {
+                                    "top",
+                                    new face(-0.135f, 0.01f, -0.075f)
+                                    {
+                                        new tri(0.00f, 0.0f, 0.00f, 0.23f, 0.23f, 0.23f,
+                                                0.27f, 0.0f, 0.00f, 0.23f, 0.23f, 0.23f,
+                                                0.05f, 0.0f, 0.15f, 0.23f, 0.23f, 0.23f),
+
+                                        new tri(0.27f, 0.0f, 0.00f, 0.23f, 0.23f, 0.23f,
+                                                0.05f, 0.0f, 0.15f, 0.23f, 0.23f, 0.23f,
+                                                0.22f, 0.0f, 0.15f, 0.23f, 0.23f, 0.23f)
+                                    }
+                                },
+
+                                {
+                                    "bottom",
+                                    new face(-0.135f, 0.0f, -0.075f)
+                                    {
+                                        new tri(0.00f, 0.0f, 0.00f, 0.13f, 0.13f, 0.13f,
+                                                0.27f, 0.0f, 0.00f, 0.13f, 0.13f, 0.13f,
+                                                0.05f, 0.0f, 0.15f, 0.13f, 0.13f, 0.13f),
+
+                                        new tri(0.27f, 0.0f, 0.00f, 0.13f, 0.13f, 0.13f,
+                                                0.05f, 0.0f, 0.15f, 0.13f, 0.13f, 0.13f,
+                                                0.22f, 0.0f, 0.15f, 0.13f, 0.13f, 0.13f)
+                                    }
+                                },
+
+                                {
+                                    "left",
+                                    new face(-0.135f, 0.0f, -0.075f)
+                                    {
+                                        new tri(0.00f, 0.01f, 0.00f, 0.17f, 0.17f, 0.17f,
+                                                0.05f, 0.01f, 0.15f, 0.17f, 0.17f, 0.17f,
+                                                0.00f, 0.00f, 0.00f, 0.17f, 0.17f, 0.17f),
+
+                                        new tri(0.05f, 0.01f, 0.15f, 0.17f, 0.17f, 0.17f,
+                                                0.00f, 0.00f, 0.00f, 0.17f, 0.17f, 0.17f,
+                                                0.05f, 0.00f, 0.15f, 0.17f, 0.17f, 0.17f)
+                                    }
+                                },
+
+                                {
+                                    "right",
+                                    new face(0.085f, 0.0f, -0.075f)
+                                    {
+                                        new tri(0.00f, 0.01f, 0.15f, 0.17f, 0.17f, 0.17f,
+                                                0.05f, 0.01f, 0.00f, 0.17f, 0.17f, 0.17f,
+                                                0.00f, 0.00f, 0.15f, 0.17f, 0.17f, 0.17f),
+
+                                        new tri(0.05f, 0.01f, 0.00f, 0.17f, 0.17f, 0.17f,
+                                                0.00f, 0.00f, 0.15f, 0.17f, 0.17f, 0.17f,
+                                                0.05f, 0.00f, 0.00f, 0.17f, 0.17f, 0.17f)
+                                    }
+                                },
+
+                                {
+                                    "front",
+                                    new face(-0.085f, 0.0f, 0.075f)
+                                    {
+                                        new tri(0.00f, 0.01f, 0.0f, 0.20f, 0.20f, 0.20f,
+                                                0.17f, 0.01f, 0.0f, 0.20f, 0.20f, 0.20f,
+                                                0.00f, 0.00f, 0.0f, 0.20f, 0.20f, 0.20f),
+
+                                        new tri(0.17f, 0.01f, 0.0f, 0.20f, 0.20f, 0.20f,
+                                                0.00f, 0.00f, 0.0f, 0.20f, 0.20f, 0.20f,
+                                                0.17f, 0.00f, 0.0f, 0.20f, 0.20f, 0.20f)
+                                    }
+                                },
+
+                                {
+                                    "back",
+                                    new face(-0.135f, 0.0f, -0.075f)
+                                    {
+                                        new tri(0.00f, 0.01f, 0.0f, 0.10f, 0.10f, 0.10f,
+                                                0.27f, 0.01f, 0.0f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.00f, 0.0f, 0.10f, 0.10f, 0.10f),
+
+                                        new tri(0.27f, 0.01f, 0.0f, 0.10f, 0.10f, 0.10f,
+                                                0.00f, 0.00f, 0.0f, 0.10f, 0.10f, 0.10f,
+                                                0.27f, 0.00f, 0.0f, 0.10f, 0.10f, 0.10f)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "desk",
+                    new scene_object
+                    {
+                        {
+                            "desktop",
+                            new piece(0.0f, 0.72f, 0.0f)
+                            {
+                                {
+                                    "top",
+                                    new face(0.0f, 0.03f, 0.0f)
+                                    {
+                                        new tri(-0.75f, 0.00f, -0.375f, 0.4f, 0.2745f, 0.1804f,
+                                                 0.75f, 0.00f, -0.375f, 0.4f, 0.2745f, 0.1804f,
+                                                -0.75f, 0.00f,  0.375f, 0.4f, 0.2745f, 0.1804f),
+
+                                        new tri( 0.75f, 0.00f, -0.375f, 0.4f, 0.2745f, 0.1804f,
+                                                -0.75f, 0.00f,  0.375f, 0.4f, 0.2745f, 0.1804f,
+                                                 0.75f, 0.00f,  0.375f, 0.4f, 0.2745f, 0.1804f)
+                                    }
+                                },
+
+                                {
+                                    "front",
+                                    new face(0.0f, 0.0f, 0.375f)
+                                    {
+                                        new tri(-0.75f,  0.03f, 0.0f, 0.37f, 0.2445f, 0.1504f,
+                                                 0.75f,  0.03f, 0.0f, 0.37f, 0.2445f, 0.1504f,
+                                                -0.75f, -0.03f, 0.0f, 0.37f, 0.2445f, 0.1504f),
+
+                                        new tri( 0.75f,  0.03f, 0.0f, 0.37f, 0.2445f, 0.1504f,
+                                                -0.75f, -0.03f, 0.0f, 0.37f, 0.2445f, 0.1504f,
+                                                 0.75f, -0.03f, 0.0f, 0.37f, 0.2445f, 0.1504f)
+                                    }
+                                },
+
+                                {
+                                    "left",
+                                    new face(-0.75f, 0.0f, 0.0f)
+                                    {
+                                        new tri(0.0f,  0.03f, -0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f,  0.03f,  0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f, -0.03f, -0.375f, 0.34f, 0.2145f, 0.1204f),
+
+                                        new tri(0.0f,  0.03f,  0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f, -0.03f, -0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f, -0.03f,  0.375f, 0.34f, 0.2145f, 0.1204f)
+                                    }
+                                },
+
+                                {
+                                    "right",
+                                    new face(0.75f, 0.0f, 0.0f)
+                                    {
+                                        new tri(0.0f,  0.03f, -0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f,  0.03f,  0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f, -0.03f, -0.375f, 0.34f, 0.2145f, 0.1204f),
+
+                                        new tri(0.0f,  0.03f,  0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f, -0.03f, -0.375f, 0.34f, 0.2145f, 0.1204f,
+                                                0.0f, -0.03f,  0.375f, 0.34f, 0.2145f, 0.1204f)
+                                    }
+                                },
+
+                                {
+                                    "back",
+                                    new face(0.0f, 0.0f, -0.375f)
+                                    {
+                                        new tri(-0.75f,  0.03f, 0.0f, 0.31f, 0.1845f, 0.0904f,
+                                                 0.75f,  0.03f, 0.0f, 0.31f, 0.1845f, 0.0904f,
+                                                -0.75f, -0.03f, 0.0f, 0.31f, 0.1845f, 0.0904f),
+
+                                        new tri( 0.75f,  0.03f, 0.0f, 0.31f, 0.1845f, 0.0904f,
+                                                -0.75f, -0.03f, 0.0f, 0.31f, 0.1845f, 0.0904f,
+                                                 0.75f, -0.03f, 0.0f, 0.31f, 0.1845f, 0.0904f)
+                                    }
+                                },
+
+                                {
+                                    "bottom",
+                                    new face
+                                    {
+                                        new tri(-0.75f, -0.03f, -0.375f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.75f, -0.03f, -0.375f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.75f, -0.03f,  0.375f, 0.28f, 0.1545f, 0.0604f),
+
+                                        new tri( 0.75f, -0.03f, -0.375f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.75f, -0.03f,  0.375f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.75f, -0.03f,  0.375f, 0.28f, 0.1545f, 0.0604f)
+                                    }
+                                }
+                            }
+                        },
+
+                        {
+                            "left foot",
+                            new piece(-0.67f)
+                            {
+                                {
+                                    "right",
+                                    new face(0.03f)
+                                    {
+                                        new tri(0.0f, 0.69f, -0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.69f,  0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.00f, -0.315f, 0.25f, 0.1245f, 0.0304f),
+
+                                        new tri(0.0f, 0.69f,  0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.00f, -0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.00f,  0.315f, 0.25f, 0.1245f, 0.0304f)
+                                    }
+                                },
+
+                                {
+                                    "front",
+                                    new face(0.0f, 0.0f, 0.315f)
+                                    {
+                                        new tri(-0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f),
+
+                                        new tri( 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f)
+                                    }
+                                },
+
+                                {
+                                    "left",
+                                    new face(-0.03f)
+                                    {
+                                        new tri(0.0f, 0.69f, -0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.69f,  0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.00f, -0.315f, 0.31f, 0.1845f, 0.0904f),
+
+                                        new tri(0.0f, 0.69f,  0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.00f, -0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.00f,  0.315f, 0.31f, 0.1845f, 0.0904f)
+                                    }
+                                },
+
+                                {
+                                    "back",
+                                    new face(0.0f, 0.0f, -0.315f)
+                                    {
+                                        new tri(-0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f),
+
+                                        new tri( 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f)
+                                    }
+                                },
+
+                                {
+                                    "bottom",
+                                    new face
+                                    {
+                                        new tri(-0.03f, 0.0f, -0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                 0.03f, 0.0f, -0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                -0.03f, 0.0f,  0.315f, 0.22f, 0.0945f, 0.0004f),
+
+                                        new tri( 0.03f, 0.0f, -0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                -0.03f, 0.0f,  0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                 0.03f, 0.0f,  0.315f, 0.22f, 0.0945f, 0.0004f)
+                                    }
+                                }
+                            }
+                        },
+
+                        {
+                            "right foot",
+                            new piece(0.67f)
+                            {
+                                {
+                                    "left",
+                                    new face(-0.03f)
+                                    {
+                                        new tri(0.0f, 0.69f, -0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.69f,  0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.00f, -0.315f, 0.25f, 0.1245f, 0.0304f),
+
+                                        new tri(0.0f, 0.69f,  0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.00f, -0.315f, 0.25f, 0.1245f, 0.0304f,
+                                                0.0f, 0.00f,  0.315f, 0.25f, 0.1245f, 0.0304f)
+                                    }
+                                },
+
+                                {
+                                    "front",
+                                    new face(0.0f, 0.0f, 0.315f)
+                                    {
+                                        new tri(-0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f),
+
+                                        new tri( 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f)
+                                    }
+                                },
+
+                                {
+                                    "right",
+                                    new face(0.03f)
+                                    {
+                                        new tri(0.0f, 0.69f, -0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.69f,  0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.00f, -0.315f, 0.31f, 0.1845f, 0.0904f),
+
+                                        new tri(0.0f, 0.69f,  0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.00f, -0.315f, 0.31f, 0.1845f, 0.0904f,
+                                                0.0f, 0.00f,  0.315f, 0.31f, 0.1845f, 0.0904f)
+                                    }
+                                },
+
+                                {
+                                    "back",
+                                    new face(0.0f, 0.0f, -0.315f)
+                                    {
+                                        new tri(-0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f),
+
+                                        new tri( 0.03f, 0.69f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                -0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f,
+                                                 0.03f, 0.00f, 0.0f, 0.28f, 0.1545f, 0.0604f)
+                                    }
+                                },
+
+                                {
+                                    "bottom",
+                                    new face
+                                    {
+                                        new tri(-0.03f, 0.0f, -0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                 0.03f, 0.0f, -0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                -0.03f, 0.0f,  0.315f, 0.22f, 0.0945f, 0.0004f),
+
+                                        new tri( 0.03f, 0.0f, -0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                -0.03f, 0.0f,  0.315f, 0.22f, 0.0945f, 0.0004f,
+                                                 0.03f, 0.0f,  0.315f, 0.22f, 0.0945f, 0.0004f)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+
+        shader = new Shader("../../../shaders/shader.vert", "../../../shaders/shader.frag");
+
+        view = Matrix4.LookAt(Position, Position + front, up);
+        projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90f), Size.X / (float)Size.Y, 0.1f, 100.0f);
+    }
+    protected override void OnRenderFrame(FrameEventArgs args)
+    {
+        base.OnRenderFrame(args);
+        current_second_frames += 1;
+        elapsed_second += args.Time;
+        if (elapsed_second > 1)
+        {
+            elapsed_second = 0;
+            fps = current_second_frames;
+            current_second_frames = 0;
+        }
+        var cursorpos = Console.GetCursorPosition();
+        Console.SetCursorPosition(0, 0);
+        Console.WriteLine("Current position: {0}                                         \nFPS: {1}                                            \n", Position, fps);
+        Console.SetCursorPosition(cursorpos.Left, cursorpos.Top);
+
+        view = Matrix4.LookAt(Position, Position + front, up);
+
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+        main_scene.draw(shader, Matrix4.Identity, view, projection, args.Time);
+
+        SwapBuffers();
+    }
 
     protected override void OnUpdateFrame(FrameEventArgs args)
     {
@@ -72,14 +630,13 @@ public class Game : GameWindow
                 Position -= up * speed * (float)args.Time;
             }
 
-            if (KeyboardState.IsKeyDown(Keys.P) && !last_p)
+            if (KeyboardState.IsKeyDown(Keys.P))
             {
-                last_p = true;
-                pantallas.Add(new pantalla(Position.X, Position.Y, Position.Z));
+                main_scene["desk"]["left foot"].rotate_Y(1f * (float)args.Time);
             }
-            else if (!KeyboardState.IsKeyDown(Keys.P))
+
+            if (KeyboardState.IsKeyDown(Keys.O))
             {
-                last_p = false;
             }
         }
     }
@@ -125,64 +682,6 @@ public class Game : GameWindow
             MousePosition = new Vector2(Size.X / 2f, Size.Y / 2f);
         }
     }
-
-    protected override void OnLoad()
-    {
-        base.OnLoad();
-        MousePosition = new Vector2(Size.X / 2f, Size.Y / 2f);
-
-        Console.WriteLine("Current position: {0}\n\n", Position);
-
-
-        pantallas.Add(new pantalla(2f, 0f, 0f, -9f));
-        pantallas.Add(new pantalla(-2f, 0f, 0f, 90f));
-        pantallas.Add(new pantalla(0f, 0f, -2f));
-        pantallas.Add(new pantalla(0f, 0f, 2f, 180f));
-
-        GL.ClearColor(0.25882353f, 0.72549f, 0.96f, 1.0f);
-        GL.Enable(EnableCap.DepthTest);
-        CursorState = CursorState.Grabbed;
-
-        Position = new Vector3(0.0f, 0.0f, 3.0f);
-        front = new Vector3(0.0f, 0.0f, -1.0f);
-        up = Vector3.UnitY;
-
-        shader = new Shader("../../../shaders/shader.vert", "../../../shaders/shader.frag");
-
-
-
-        view = Matrix4.LookAt(Position, Position + front, up);
-        projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(90f), Size.X / (float)Size.Y, 0.1f, 100.0f);
-    }
-
-    protected override void OnRenderFrame(FrameEventArgs args)
-    {
-        base.OnRenderFrame(args);
-        current_second_frames += 1;
-        elapsed_second += args.Time;
-        if (elapsed_second > 1)
-        {
-            elapsed_second = 0;
-            fps = current_second_frames;
-            current_second_frames = 0;
-        }
-        var cursorpos = Console.GetCursorPosition();
-        Console.SetCursorPosition(0, 0);
-        Console.WriteLine("Current position: {0}                                         \nFPS: {1}                                            \n", Position, fps);
-        Console.SetCursorPosition(cursorpos.Left, cursorpos.Top);
-
-
-        view = Matrix4.LookAt(Position, Position + front, up);
-
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-        pantallas.draw(shader, view, projection, args.Time);
-
-
-        SwapBuffers();
-    }
-
-
 
     protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
     {
