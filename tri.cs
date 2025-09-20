@@ -1,6 +1,9 @@
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using Newtonsoft.Json;
 
+
+[JsonObjectAttribute]
 public class Tri
 {
     private int VertexBufferObject;
