@@ -25,6 +25,9 @@ public class Game : GameWindow
     float sensitivity = 0.1f;
 
     bool last_p = false;
+    double elapsed_second = 0;
+    int current_second_frames = 0;
+    int fps = 0;
 
     object_array pantallas = new object_array();
 
@@ -128,7 +131,7 @@ public class Game : GameWindow
         base.OnLoad();
         MousePosition = new Vector2(Size.X / 2f, Size.Y / 2f);
 
-        Console.WriteLine("Current position: {0} \n", Position);
+        Console.WriteLine("Current position: {0}\n\n", Position);
 
 
         pantallas.Add(new pantalla(2f, 0f, 0f, -9f));
@@ -155,10 +158,17 @@ public class Game : GameWindow
     protected override void OnRenderFrame(FrameEventArgs args)
     {
         base.OnRenderFrame(args);
-
+        current_second_frames += 1;
+        elapsed_second += args.Time;
+        if (elapsed_second > 1)
+        {
+            elapsed_second = 0;
+            fps = current_second_frames;
+            current_second_frames = 0;
+        }
         var cursorpos = Console.GetCursorPosition();
         Console.SetCursorPosition(0, 0);
-        Console.WriteLine("Current position: {0} \n", Position);
+        Console.WriteLine("Current position: {0}                                         \nFPS: {1}                                            \n", Position, fps);
         Console.SetCursorPosition(cursorpos.Left, cursorpos.Top);
 
 
