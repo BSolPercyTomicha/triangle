@@ -12,6 +12,7 @@
     <PackageReference Include="OpenTK.Mathematics" Version="4.9.4" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Zenseless.OpenTK.GUI" Version="0.1.25" />
   </ItemGroup>
 
 </Project>

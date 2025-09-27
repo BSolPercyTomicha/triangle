@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-
 public class ObjectCreation
 {
     public ObjectCreation()
@@ -25,6 +24,18 @@ public class ObjectCreation
         using (StreamWriter sw = File.CreateText("../../../assets/objects/desk.json"))
         {
             sw.Write(JsonConvert.SerializeObject(Desk(), Formatting.Indented, settings));
+        }
+    }
+
+    public static Object3D LoadObject(string name, float offset_x = 0.0f, float offset_y = 0.0f, float offset_z = 0.0f)
+    {
+        using (StreamReader sr = File.OpenText("../../../assets/objects/" + name + ".json"))
+        {
+            Object3D objectOut = JsonConvert.DeserializeObject<Object3D>(sr.ReadToEnd());
+            objectOut.offset_x = offset_x;
+            objectOut.offset_y = offset_y;
+            objectOut.offset_z = offset_z;
+            return objectOut;
         }
     }
 
